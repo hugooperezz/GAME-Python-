@@ -17,7 +17,7 @@ def menu():
                                                   
 """)
     print
-    print("=====Menu=====","\n1. Mostrar inventario", "\n2. Añradir Juego", "\n3. Salir")
+    print("=====Menu=====","\n1. Mostrar inventario", "\n2. Añadir Juego", "\n3. Buscar Juego", "\n4. Salir")
     bucle = True
     while bucle:
         opcion = int(input("\nElige una opcion: "))
@@ -26,14 +26,18 @@ def menu():
                 imprimir_productos(productos)
             case 2:
                 nombre = input("Ingrese el nombre del juego: ")
-                precio = int(input("Ingrese el precio del juego: "))
+                precio = float(input("Ingrese el precio del juego: "))
                 cantidad = int(input("Ingrese la cantidad del juego: "))
                 agregar_producto(productos, nombre, precio, cantidad)
             case 3:
+                nombre = input("Ingrese el nombre del juego: ")
+                buscar_producto(productos, nombre)
+            case 4:
                 print("Salir")
                 bucle = False
             case _:
                 print("Opcion invalida")
+                
 def imprimir_productos(productos):
     print("\n===== PRODUCTOS DISPONIBLES =====")
     print("Nombre       Precio    Cantidad")
@@ -41,7 +45,26 @@ def imprimir_productos(productos):
     for i in range(len(productos)):
         print(productos[i][0], "/", productos[i][1], "€" ,"/", productos[i][2])
     print("------------------------------")
+    
 
 def agregar_producto(productos, nombre, precio, cantidad):
     productos.append([nombre, precio, cantidad])
+    
+def buscar_producto(productos, nombre):
+    for producto in productos:
+        if producto[0] == nombre: 
+            print(f"""
+===============================
+✔️  El juego '{nombre}' está disponible en el inventario.
+   - Precio: {producto[1]} €
+   - Cantidad disponible: {producto[2]}
+===============================
+            """)
+            return
+    print(f"""
+===============================
+❌ El juego '{nombre}' no está en el inventario.
+===============================
+    """)
+
 menu()
