@@ -1,10 +1,22 @@
+import tkinter as tk
+
 productos = [
-    ["GTA VI", 79.99, 200],#Nombre, Precio, Cantidad
-    ["R6", 19.99, 200],
-    ["Minecraft", 14.99, 200],
-    ["Call of Duty", 79.99, 200],
+    ["GTA VI", 79.99, 100],#Nombre, Precio, Cantidad
+    ["R6", 19.99, 20],
+    ["Minecraft", 14.99, 35],
+    ["Call of Duty", 79.99, 85],
     ["FIFA 26", 79.99, 50],
 ]
+def inicio():
+    print("\n======== Como quieres operar ========\n" + "-" * 22 ,"\n1. Consola\n" + "-" * 22 , "\n2. Interfaz\n" + "-" * 22,"\n======================")
+    opcion = int(input("Selecciona una opcion"))
+    match opcion:
+        case 1:
+            menu()
+        case 2:
+            interfaz()
+        case _:
+            print("Opcion no valida")
 
 #Funcion menu que despliega el nombre de la empresa y las opciones disponibles
 def menu():
@@ -19,7 +31,7 @@ def menu():
 """)
     bucle = True
     while bucle:
-        print("\n======== Menu ========\n" + "-" * 22 ,"\n1. Mostrar inventario\n" + "-" * 22 , "\n2. Añadir Juego\n" + "-" * 22, "\n3. Buscar Juego\n" + "-" * 22, "\n4. Actualizar Producto\n" + "-" * 22, "\n5. Eliminar Producto\n" + "-" * 22, "\n6. Resumen inventario\n" + "-" * 22,"\n7. Salir\n" + "-" * 22,"\n======================")
+        print("\n======== Menu ========\n" + "-" * 22 ,"\n1. Mostrar inventario\n" + "-" * 22 , "\n2. Añadir Juego\n" + "-" * 22, "\n3. Buscar Juego\n" + "-" * 22, "\n4. Actualizar Producto\n" + "-" * 22, "\n5. Eliminar Producto\n" + "-" * 22, "\n6. Resumen inventario\n"+ "-" * 22, "\n7. Buscar Juego\n" + "-" * 22,"\n8. Salir\n" + "-" * 22,"\n======================")
         opcion = int(input("\nElige una opcion: "))
         match opcion:
             case 1:
@@ -40,6 +52,9 @@ def menu():
             case 6:
                 resumen()
             case 7:
+                cantidad = int(input("Ingrese una cantidad en especifico para que salgan los productos con dicha cantidad "))
+                buscar_cantidad(cantidad)
+            case 8:
                 print("Salir")
                 bucle = False
             case _:
@@ -194,6 +209,53 @@ def resumen():
     
     # Mostrar el valor total de los productos
     print(f"Valor total de los productos: {valorTotal()} €")
-    print("=" * 40) 
+    print("=" * 40)
 
-menu()
+#Funcion que se encarga de buscar productos con una cantidad especifica y imprimir los productos menores a esa cantidad
+def buscar_cantidad(cantidad):
+    productoMenorCantidad = sorted(productos, key=lambda x: x[2], reverse=True)
+    print("\nLos productos con una cantidad menor a:", cantidad,"€")
+    for i in productoMenorCantidad:
+        if i[2] <= cantidad:  
+            print(f"""==============================================================
+    - El juego '{i[0]}' está disponible en el inventario.
+    - Precio: {i[1]} €
+    - Cantidad disponible: {i[2]} """)
+    print("==============================================================")
+            
+def interfaz():
+    # Crear la ventana
+    ventana = tk.Tk()
+    ventana.title("VIPGEN")
+    ventana.geometry("800x200")  # Tamaño inicial de la ventana
+
+    # Título centrado
+    nombreTitulo = "VIPGEN"
+    titulo = tk.Label(ventana, text=nombreTitulo, font=("Courier", 16, "bold"), fg="blue")
+    titulo.grid(row=0, column=0, columnspan=7, pady=10) 
+
+    # Botones con estilos y márgenes
+    boton1 = tk.Button(ventana, text="Mostrar inventario", bg="lightblue", fg="black", font=("Arial", 10))
+    boton1.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+
+    boton2 = tk.Button(ventana, text="Añadir Juego", bg="lightgreen", fg="black", font=("Arial", 10))
+    boton2.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+
+    boton3 = tk.Button(ventana, text="Buscar Juego", bg="lightyellow", fg="black", font=("Arial", 10))
+    boton3.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
+
+    boton4 = tk.Button(ventana, text="Actualizar Producto", bg="lightcoral", fg="black", font=("Arial", 10))
+    boton4.grid(row=1, column=3, padx=5, pady=5, sticky="ew")
+
+    boton5 = tk.Button(ventana, text="Eliminar Producto", bg="lightpink", fg="black", font=("Arial", 10))
+    boton5.grid(row=1, column=4, padx=5, pady=5, sticky="ew")
+
+    boton6 = tk.Button(ventana, text="Resumen Inventario", bg="lightgray", fg="black", font=("Arial", 10))
+    boton6.grid(row=1, column=5, padx=5, pady=5, sticky="ew")
+
+    boton7 = tk.Button(ventana, text="Buscar Juego", bg="red", fg="white", font=("Arial", 10, "bold"))
+    boton7.grid(row=1, column=6, padx=5, pady=5, sticky="ew")
+
+    ventana.mainloop()
+
+inicio()
