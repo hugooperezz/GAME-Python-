@@ -159,6 +159,7 @@ def eliminar_producto(nombre):
         for producto in productos:
             if producto[0] == nombre:
                 productos.remove(producto)
+                print("Producto eliminado")
                 break
     else:
         print("Producto no encontrado")
@@ -227,7 +228,7 @@ def buscar_cantidad(cantidad):
 
 #Metodo que se usa como union de los metodos anteriores para que se impriman de una forma atractiva
 def resumen_Interfaz(nueva_ventana):
-    nueva_ventana = tk.Toplevel()
+    nueva_ventana = tk.Tk()
     nueva_ventana.title("Resumen de Inventario")
     nueva_ventana.geometry("850x200") 
 
@@ -239,24 +240,36 @@ def resumen_Interfaz(nueva_ventana):
 
     tk.Label(nueva_ventana, text=f"Valor total de los productos: {valorTotal()} €", font=("Arial", 10), fg="blue").grid(row=3, column=0, columnspan=3, pady=5, sticky="nsew")     
 
-#Metodo que primero comprueba que el producto exista con la ayuda del metodo comprobar_producto, el metodo recorre el array asta encontrar el producto y eliminarlo de la lista
-def eliminar_producto_Interfaz(nueva_ventana):
-    nueva_ventana = tk.Toplevel()
+def eliminar_producto_Interfaz():
+    nueva_ventana = tk.Tk()
     nueva_ventana.title("Eliminar Producto")
-    nueva_ventana.geometry("850x200")
+    nueva_ventana.geometry("850x300")
     
-    tk.Label(nueva_ventana, text="Eliminar Producto", font=("Arial", 12, "bold"), fg="blue").grid(row=0, column=0, columnspan=3, pady=10, sticky="nsew") 
-    nombre = tk.Entry(nueva_ventana, width=20).lower()
-    nombre.grid(row=1, column=0, columnspan=3, pady=5, sticky="nsew")
+    nueva_ventana.grid_columnconfigure(0, weight=1)
+    nueva_ventana.grid_columnconfigure(1, weight=1)
+    nueva_ventana.grid_columnconfigure(2, weight=1)
+    
+    # Frame principal para contener todos los elementos
+    frame_principal = tk.Frame(nueva_ventana)
+    frame_principal.grid(row=0, column=0, columnspan=3, pady=20)
 
-    boton1 = tk.Button(nueva_ventana, text="Eliminar", bg="red", fg="white", font=("Arial", 10, "bold"), command=lambda:eliminar_producto(nombre.get()))
-    boton1.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
-
+    tk.Label(frame_principal,  text="Eliminar Producto", font=("Arial", 14, "bold"), fg="blue").grid(row=0, column=0, columnspan=2, pady=20)
+    
+    frame_entrada = tk.Frame(frame_principal)
+    frame_entrada.grid(row=1, column=0, columnspan=2, pady=10)
+    
+    tk.Label(frame_entrada, text="Nombre del producto:", font=("Arial", 10)).grid(row=0, column=0, padx=10)
+    
+    entrada_nombre = tk.Entry(frame_entrada, width=30)
+    entrada_nombre.grid(row=0, column=1, padx=10)
+    
+    boton = tk.Button(frame_principal,text="Eliminar",command=lambda: eliminar_producto(entrada_nombre.get()),width=15,bg="lightblue",fg="black",font=("Arial", 10))
+    boton.grid(row=2, column=0, columnspan=2, pady=20)
     
 
 #Metodo que se usa como union de los metodos anteriores para que se impriman de una forma atractiva
 def buscar_cantidad_Interfaz(nueva_ventana):
-    nueva_ventana = tk.Toplevel()
+    nueva_ventana = tk.Tk()
     nueva_ventana.title("Buscar Cantidad")
     nueva_ventana.geometry("850x200")
     
@@ -265,7 +278,7 @@ def buscar_cantidad_Interfaz(nueva_ventana):
 
 #Metodo que primero comprueba que el producto exista con la ayuda del metodo comprobar_producto, el metodo recorre el array asta encontrar el producto y eliminarlo de la lista
 def actualizar_producto_Interfaz(nueva_ventana):
-    nueva_ventana = tk.Toplevel()
+    nueva_ventana = tk.Tk()
     nueva_ventana.title("Actualizar Producto")
     nueva_ventana.geometry("850x200")
     
@@ -298,19 +311,19 @@ def interfaz():
     boton3 = tk.Button(ventana, text="Buscar Juego", bg="lightyellow", fg="black", font=("Arial", 10))
     boton3.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
 
-    boton4 = tk.Button(ventana, text="Actualizar Producto", bg="lightcoral", fg="black", font=("Arial", 10) , command=lambda:actualizar_producto_Interfaz(ventana))
+    boton4 = tk.Button(ventana, text="Actualizar Producto", bg="lightcoral", fg="black", font=("Arial", 10) , command=lambda:actualizar_producto_Interfaz())
     boton4.grid(row=1, column=3, padx=5, pady=5, sticky="ew")
 
-    boton5 = tk.Button(ventana, text="Eliminar Producto", bg="lightpink", fg="black", font=("Arial", 10), command=lambda:eliminar_producto_Interfaz(ventana))
+    boton5 = tk.Button(ventana, text="Eliminar Producto", bg="lightpink", fg="black", font=("Arial", 10), command=lambda:eliminar_producto_Interfaz())
     boton5.grid(row=1, column=4, padx=5, pady=5, sticky="ew")
 
     boton6 = tk.Button(ventana, text="Resumen Inventario", bg="lightgray", fg="black", font=("Arial", 10), command=lambda:resumen_Interfaz(ventana))
     boton6.grid(row=1, column=5, padx=5, pady=5, sticky="ew")
 
-    boton7 = tk.Button(ventana, text="Buscar Juego", bg="Black", fg="white", font=("Arial", 10, "bold"), command=lambda:buscar_cantidad_Interfaz(ventana))
+    boton7 = tk.Button(ventana, text="Buscar Juego", bg="Black", fg="white", font=("Arial", 10, "bold"), command=lambda:buscar_cantidad_Interfaz())
     boton7.grid(row=1, column=6, padx=5, pady=5, sticky="ew")
     
-    boton8 = tk.Button(ventana, text="Salir  ", bg="red", fg="white", font=("Arial", 10, "bold"), command=lambda:salir_Interfaz(ventana))
+    boton8 = tk.Button(ventana, text="Salir  ", bg="red", fg="white", font=("Arial", 10, "bold"), command=lambda:salir_Interfaz())
     boton8.grid(row=1, column=7, padx=5, pady=5, sticky="ew")
     ventana.mainloop()
 
