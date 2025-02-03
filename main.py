@@ -226,6 +226,119 @@ def buscar_cantidad(cantidad):
     - Cantidad disponible: {i[2]} """)
     print("==============================================================")
 
+
+#Metodo que crea una sub ventana que muestra la informacion de los productos
+def imprimir_productos_Interfaz(ventana):
+    ventana2 = tk.Toplevel(ventana)
+    ventana2.title("Mostar Inventario")
+
+    # Título centrado
+    titulo = tk.Label(ventana2, text="Productos disponibles", font=("Courier", 16, "bold"), fg="blue")
+    titulo.pack(pady=10)
+
+    # Construcción de la información con un formato alineado
+    informacion = ""
+    for i in productos:
+        nombre = i[0].ljust(15)  # Asegurar que el nombre tenga 15 caracteres
+        precio = f"{i[1]:>6}"  # Ajustar el precio a la derecha con 6 espacios
+        stock = f"{i[2]:>6}"  # Ajustar el stock a la derecha con 6 espacios
+        informacion += f"{nombre} {precio} {stock}\n"
+
+    # Cuadro de texto centrado con padding y alineación
+    info_frame = tk.Frame(ventana2)
+    info_frame.pack(expand=True)
+
+    info = tk.Label(info_frame, text=informacion, font=("Courier", 12), justify="center")
+    info.pack(padx=20, pady=10)
+
+# Botón para agregar producto
+def obtener_datos(ventana2, entrada1, entrada2, entrada3):
+    try:
+        nombre = entrada1.get().strip()
+        precio = float(entrada2.get())
+        cantidad = int(entrada3.get())
+        agregar_producto(nombre, precio, cantidad)
+        ventana2.destroy()  # Cierra la ventana después de agregar el producto
+    except ValueError:
+        print("Error: Introduce valores válidos.")
+
+#Metodo para crear la sub pantalla de el apartado de agregar producto
+def agregar_producto_interfaz(ventana):
+    ventana2 = tk.Toplevel(ventana)
+    ventana2.title("Agregar Producto")
+    ventana2.geometry("300x250")
+
+     # Frame para centrar contenido
+    frame = tk.Frame(ventana2)
+    frame.pack(expand=True, padx=20, pady=20)
+
+    # Título
+    titulo = tk.Label(frame, text="Agregar Producto", font=("Courier", 16, "bold"), fg="blue")
+    titulo.grid(row=0, column=0, columnspan=2, pady=10)
+
+    # Nombre del producto
+    Nombre = tk.Label(frame, text="Nombre:")
+    Nombre.grid(row=1, column=0, sticky="w", pady=5)
+    entrada1 = tk.Entry(frame)
+    entrada1.grid(row=1, column=1, pady=5)
+
+    # Precio del producto
+    Precio = tk.Label(frame, text="Precio:")
+    Precio.grid(row=2, column=0, sticky="w", pady=5)
+    entrada2 = tk.Entry(frame)
+    entrada2.grid(row=2, column=1, pady=5)
+
+    # Cantidad del producto
+    Cantidad = tk.Label(frame, text="Cantidad:")
+    Cantidad.grid(row=3, column=0, sticky="w", pady=5)
+    entrada3 = tk.Entry(frame)
+    entrada3.grid(row=3, column=1, pady=5)
+
+    boton = tk.Button(frame, text="Añadir", command=lambda:obtener_datos(ventana2, entrada1, entrada2, entrada3))
+    boton.grid(row=4, column=0, columnspan=2, pady=10)
+    
+#Metodo complementario de buscar_producto_interfaz que recoge la informacion de los label y completa el label resultado
+def identificar_producto(resultado, entrada1):
+    try:
+        nombre = entrada1.get().strip()
+
+        informacion = ""
+        for i in productos:
+            if i[0] == nombre:
+                nom = i[0].ljust(15)  # Asegurar que el nombre tenga 15 caracteres
+                precio = f"{i[1]:>6}"  # Ajustar el precio a la derecha con 6 espacios
+                stock = f"{i[2]:>6}"  # Ajustar el stock a la derecha con 6 espacios
+                informacion += f"{nom} {precio}€ {stock}\n"
+                resultado.config(text=informacion)
+
+    except:
+        resultado.config(text="Error: Introduce valores válidos.")
+
+#Metodo que crea una sub ventana para buscar el producto
+def buscar_producto_interfaz(ventana):
+    ventana2 = tk.Toplevel(ventana)
+    ventana2.title("Buscar Producto")
+
+    # Frame para centrar contenido
+    frame = tk.Frame(ventana2)
+    frame.pack(expand=True, padx=20, pady=20)
+
+    titulo = tk.Label(frame,text="Buscar Producto",  font=("Courier", 16, "bold"), fg="blue")
+    titulo.grid(row=0,column=0,padx=0,pady=0)
+
+    # Nombre del producto
+    Nombre = tk.Label(frame, text="Nombre:", font=("Arial", 12))
+    Nombre.grid(row=1, column=0, sticky="w", pady=5)
+    entrada1 = tk.Entry(frame)
+    entrada1.grid(row=1, column=1, pady=5, padx=10, sticky="ew")
+
+    #Boton
+    boton = tk.Button(frame, text="Buscar", command=lambda:identificar_producto(resultado, entrada1))
+    boton.grid(row=2, column=0, columnspan=2, pady=10)
+
+    resultado = tk.Label(frame, text="", font=("Arial", 12), foreground="red")
+    resultado.grid(row=3, column=0, columnspan=2, pady=5)
+
 #Metodo que se usa como union de los metodos anteriores para que se impriman de una forma atractiva
 def resumen_Interfaz(nueva_ventana):
     nueva_ventana = tk.Tk()
@@ -244,45 +357,132 @@ def eliminar_producto_Interfaz():
     nueva_ventana = tk.Tk()
     nueva_ventana.title("Eliminar Producto")
     nueva_ventana.geometry("850x300")
+
+    nueva_ventana.grid_columnconfigure(0, weight=1)
+    nueva_ventana.grid_columnconfigure(1, weight=1)
+    nueva_ventana.grid_columnconfigure(2, weight=1)
+
+    frame_principal = tk.Frame(nueva_ventana)
+    frame_principal.grid(row=0, column=0, columnspan=3, pady=20)
+
+    tk.Label(frame_principal, text="Eliminar Producto", font=("Arial", 14, "bold"), fg="blue").grid(row=0, column=0, columnspan=2, pady=20)
+
+    frame_entrada = tk.Frame(frame_principal)
+    frame_entrada.grid(row=1, column=0, columnspan=2, pady=10)
+
+    tk.Label(frame_entrada, text="Nombre del producto:", font=("Arial", 10)).grid(row=0, column=0, padx=10)
+
+    entrada_nombre = tk.Entry(frame_entrada, width=30)
+    entrada_nombre.grid(row=0, column=1, padx=10)
+
+    mensaje_label = tk.Label(frame_principal, text="", font=("Arial", 10), fg="green")
+    mensaje_label.grid(row=3, column=0, columnspan=2, pady=10)
+
+    #Cuando se pulsa el boton de borrar se muestra un JLabel que indica que el producto se ha borrado correctamente
+    boton = tk.Button(frame_principal,text="Eliminar",command=lambda: [eliminar_producto(entrada_nombre.get()), mensaje_label.config(text="Producto Borrado Exitosamente")],width=15,bg="lightblue",fg="black",font=("Arial", 10))
+    boton.grid(row=2, column=0, columnspan=2, pady=20)
+
+#Metodo que se introduce una cantidad en especifica y se imprimen en la ventana
+def buscar_cantidad_Interfaz():
+    def buscar_cantidad():
+        cantidad = int(entrada_nombre.get())
+        productoMenorCantidad = sorted(productos, key=lambda x: x[2], reverse=True)            
+        resultado = ""
+        for i in productoMenorCantidad:
+            if i[2] <= cantidad:
+                resultado += f"Juego: {i[0]} - Precio: {i[1]}€ - Cantidad: {i[2]}\n"
+        
+        resultado_label = tk.Label(frame_principal, text=resultado, font=("Arial", 10))
+        resultado_label.grid(row=3, column=0, columnspan=2)
+
+    nueva_ventana = tk.Tk()
+    nueva_ventana.title("Buscar Cantidad")
+    nueva_ventana.geometry("850x300")
     
     nueva_ventana.grid_columnconfigure(0, weight=1)
     nueva_ventana.grid_columnconfigure(1, weight=1)
     nueva_ventana.grid_columnconfigure(2, weight=1)
     
-    # Frame principal para contener todos los elementos
     frame_principal = tk.Frame(nueva_ventana)
     frame_principal.grid(row=0, column=0, columnspan=3, pady=20)
-
-    tk.Label(frame_principal,  text="Eliminar Producto", font=("Arial", 14, "bold"), fg="blue").grid(row=0, column=0, columnspan=2, pady=20)
+    
+    tk.Label(frame_principal, text="Buscar Cantidad",font=("Arial", 14, "bold"),fg="blue").grid(row=0, column=0, columnspan=2, pady=20)
     
     frame_entrada = tk.Frame(frame_principal)
     frame_entrada.grid(row=1, column=0, columnspan=2, pady=10)
     
-    tk.Label(frame_entrada, text="Nombre del producto:", font=("Arial", 10)).grid(row=0, column=0, padx=10)
+    tk.Label(frame_entrada,text="Ingrese Cantidad",font=("Arial", 10)).grid(row=0, column=0, padx=10)
     
     entrada_nombre = tk.Entry(frame_entrada, width=30)
     entrada_nombre.grid(row=0, column=1, padx=10)
     
-    boton = tk.Button(frame_principal,text="Eliminar",command=lambda: eliminar_producto(entrada_nombre.get()),width=15,bg="lightblue",fg="black",font=("Arial", 10))
+    boton = tk.Button(frame_principal,text="Buscar", command= buscar_cantidad,width=15,bg="lightblue",fg="black",font=("Arial", 10))
     boton.grid(row=2, column=0, columnspan=2, pady=20)
     
+#Metodo que crea una sub ventana para actualizar el producto
+def actualizar_producto_Interfaz():
+    def actualizar():
+        nombre_producto = entrada_nombre.get()
+        try:
+            nuevo_valor = float(entrada_valor.get())
+            if nuevo_valor >= 0:
+                for i in range(len(productos)):
+                    if productos[i][0].lower() == nombre_producto.lower():
+                        if opcion.get() == 1:
+                            productos[i][1] = nuevo_valor
+                            resultado_label.config(text="Precio actualizado correctamente")
+                        else: 
+                            productos[i][2] = int(nuevo_valor)
+                            resultado_label.config(text="Cantidad actualizada correctamente")
+                        return
+                resultado_label.config(text="Producto no encontrado", fg="red")
+            else:
+                resultado_label.config(text="El valor no puede ser negativo", fg="red")
+        except ValueError:
+            resultado_label.config(text="Por favor ingrese un número válido", fg="red")
 
-#Metodo que se usa como union de los metodos anteriores para que se impriman de una forma atractiva
-def buscar_cantidad_Interfaz(nueva_ventana):
-    nueva_ventana = tk.Tk()
-    nueva_ventana.title("Buscar Cantidad")
-    nueva_ventana.geometry("850x200")
-    
-    tk.Label(nueva_ventana, text="buscar Cantidad", font=("Arial", 12, "bold"), fg="blue").grid(row=0, column=0, columnspan=3, pady=10, sticky="nsew") 
-
-
-#Metodo que primero comprueba que el producto exista con la ayuda del metodo comprobar_producto, el metodo recorre el array asta encontrar el producto y eliminarlo de la lista
-def actualizar_producto_Interfaz(nueva_ventana):
     nueva_ventana = tk.Tk()
     nueva_ventana.title("Actualizar Producto")
-    nueva_ventana.geometry("850x200")
+    nueva_ventana.geometry("850x300")
     
-    tk.Label(nueva_ventana, text="Actualizar Producto", font=("Arial", 12, "bold"), fg="blue").grid(row=0, column=0, columnspan=3, pady=10, sticky="nsew") 
+    nueva_ventana.grid_columnconfigure(0, weight=1)
+    nueva_ventana.grid_columnconfigure(1, weight=1)
+    nueva_ventana.grid_columnconfigure(2, weight=1)
+    
+    frame_principal = tk.Frame(nueva_ventana)
+    frame_principal.grid(row=0, column=0, columnspan=3, pady=20)
+    
+    tk.Label(frame_principal, text="Actualizar Producto",font=("Arial", 14, "bold"),fg="blue").grid(row=0, column=0, columnspan=2, pady=20)
+    
+    frame_entrada = tk.Frame(frame_principal)
+    frame_entrada.grid(row=1, column=0, columnspan=2, pady=10)
+    
+    tk.Label(frame_entrada,text="Nombre del producto:",font=("Arial", 10)).grid(row=0, column=0, padx=10)
+    
+    entrada_nombre = tk.Entry(frame_entrada, width=30)
+    entrada_nombre.grid(row=0, column=1, padx=10)
+    
+    opcion = tk.IntVar(value=1)
+    frame_opciones = tk.Frame(frame_principal)
+    frame_opciones.grid(row=2, column=0, columnspan=2, pady=5)
+    
+    #Radiobuttons para seleccionar el tipo de actualizacion
+    tk.Radiobutton(frame_opciones, text="Precio", variable=opcion, value=1).grid(row=0, column=0, padx=10)
+    tk.Radiobutton(frame_opciones, text="Cantidad", variable=opcion, value=2).grid(row=0, column=1, padx=10)
+
+    frame_valor = tk.Frame(frame_principal)
+    frame_valor.grid(row=3, column=0, columnspan=2, pady=5)
+    
+    tk.Label(frame_valor,text="Nuevo valor:",font=("Arial", 10)).grid(row=0, column=0, padx=10)
+    
+    entrada_valor = tk.Entry(frame_valor, width=30)
+    entrada_valor.grid(row=0, column=1, padx=10)
+    
+    boton = tk.Button(frame_principal,text="Actualizar",command=actualizar,width=15,bg="lightblue",fg="black",font=("Arial", 10))
+    boton.grid(row=4, column=0, columnspan=2, pady=20)
+    
+    resultado_label = tk.Label(frame_principal, font=("Arial", 10))
+    resultado_label.grid(row=5, column=0, columnspan=2)
 
 def salir_Interfaz(ventana):
     ventana.destroy()
@@ -302,13 +502,13 @@ def interfaz():
     titulo.grid(row=0, column=0, columnspan=7, pady=10) 
 
     # Botones con estilos y márgenes
-    boton1 = tk.Button(ventana, text="Mostrar inventario", bg="lightblue", fg="black", font=("Arial", 10) ,)
+    boton1 = tk.Button(ventana, text="Mostrar inventario", bg="lightblue", fg="black", font=("Arial", 10) , command=lambda:imprimir_productos_Interfaz(ventana))
     boton1.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
-    boton2 = tk.Button(ventana, text="Añadir Juego", bg="lightgreen", fg="black", font=("Arial", 10))
+    boton2 = tk.Button(ventana, text="Añadir Juego", bg="lightgreen", fg="black", font=("Arial", 10), command=lambda:agregar_producto_interfaz(ventana))
     boton2.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
-    boton3 = tk.Button(ventana, text="Buscar Juego", bg="lightyellow", fg="black", font=("Arial", 10))
+    boton3 = tk.Button(ventana, text="Buscar Juego", bg="lightyellow", fg="black", font=("Arial", 10),command=lambda:buscar_producto_interfaz(ventana))
     boton3.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
 
     boton4 = tk.Button(ventana, text="Actualizar Producto", bg="lightcoral", fg="black", font=("Arial", 10) , command=lambda:actualizar_producto_Interfaz())
