@@ -33,7 +33,7 @@ def menu():
 """)
     bucle = True
     while bucle:
-        print("\n======== Menu ========\n" + "-" * 22 ,"\n1. Mostrar inventario\n" + "-" * 22 , "\n2. Añadir Juego\n" + "-" * 22, "\n3. Buscar Juego\n" + "-" * 22, "\n4. Actualizar Producto\n" + "-" * 22, "\n5. Eliminar Producto\n" + "-" * 22, "\n6. Resumen inventario\n"+ "-" * 22, "\n7. Buscar Juego\n" + "-" * 22,"\n8. Salir\n" + "-" * 22,"\n======================")
+        print("\n======== Menu ========\n" + "-" * 22 ,"\n1. Mostrar inventario\n" + "-" * 22 , "\n2. Añadir Juego\n" + "-" * 22, "\n3. Buscar Juego\n" + "-" * 22, "\n4. Actualizar Producto\n" + "-" * 22, "\n5. Eliminar Producto\n" + "-" * 22, "\n6. Resumen inventario\n"+ "-" * 22, "\n7. Buscar Juego\n"+ "-" * 22,"\n8. Comprar\n"  + "-" * 22,"\n9. Salir\n" + "-" * 22,"\n======================")
         opcion = int(input("\nElige una opcion: "))
         match opcion:
             case 1:
@@ -57,6 +57,8 @@ def menu():
                 cantidad = int(input("Ingrese una cantidad en especifico para que salgan los productos con dicha cantidad "))
                 buscar_cantidad(cantidad)
             case 8:
+                comprar()
+            case 9:
                 print("Salir")
                 bucle = False
             case _:
@@ -406,6 +408,52 @@ def valorTotal():
     totalFinal = round(total, 2)
     return totalFinal
 
+def imprimir_ticket(nombreProducto, vueltas, cantidad):
+    valor = 0
+    vueltasFinal = round(vueltas, 2)
+    for i in range(len(productos)):
+        if nombreProducto == productos[i][0]:
+            valor = productos[i][1]
+    print("\n========== TIKET ==========")
+    print("---------------------------")
+    print("Producto comprado:",nombreProducto)
+    print("---------------------------")
+    print("Valor del producto", valor, "€")
+    print("---------------------------")
+    print("Cantidad pagada:", cantidad,"€")
+    print("---------------------------")
+    print("Vueltas: ", vueltasFinal,"€")
+    print("---------------------------")
+    print("===========================")
+
+def comprar():
+    imprimir_productos()
+    nombreCompra = input("Seleccione el producto que desea comprar: ")
+    producto_encontrado = False  # Para verificar si el producto existe
+
+    for i in range(len(productos)):
+        if nombreCompra == productos[i][0]:
+            producto_encontrado = True
+            
+            if producto_encontrado == True:
+                # Verificar si hay stock disponible
+                if productos[i][2] > 0:
+                    print("\nEl producto", nombreCompra, "tiene un precio de", productos[i][1], "€")
+                    cantidad = float(input("Introduce la cantidad a abonar: "))
+
+                    if cantidad >= productos[i][1]:
+                        vueltas = cantidad - productos[i][1]
+                        productos[i][2] -= 1  
+                        imprimir_ticket(nombreCompra, vueltas,cantidad)  
+                    else:
+                        print("Lo siento, no tienes suficiente dinero.")
+                else:
+                    print("Lo siento, el producto está agotado.")
+            else:
+                print("El producto seleccionado no existe.")
+
+
+
 #Metodo que se usa como union de los metodos anteriores para que se impriman de una forma atractiva
 def resumen():
     # Mostrar el número total de productos
@@ -474,10 +522,10 @@ def buscar_cantidad_Interfaz():
 
     nueva_ventana = tk.Tk()
     nueva_ventana.title("Listar Cantidad")
-    nueva_ventana.geometry("300x250")
+    nueva_ventana.geometry("400x250")
     
     frame_principal = tk.Frame(nueva_ventana)
-    frame_principal.grid(row=0, column=0, columnspan=3, pady=20)
+    frame_principal.pack(expand=True, padx=20, pady=20)
     
     tk.Label(frame_principal, text="Listar Cantidad", font=("Arial", 14, "bold"), fg="blue").grid(row=0, column=0, columnspan=2, pady=20)
     
@@ -506,39 +554,41 @@ def interfaz():
     # Crear la ventana
     ventana = tk.Tk()
     ventana.title("VIPGEN")
-    
-    
-    ventana.geometry("900x200")  # Tamaño inicial de la ventana
+    ventana.geometry("700x200")  # Tamaño inicial de la ventana
+
+    # Frame para centrar contenido
+    frame = tk.Frame(ventana)
+    frame.pack(expand=True, padx=20, pady=20)
 
     # Título centrado
     nombreTitulo = "VIPGEN"
-    titulo = tk.Label(ventana, text=nombreTitulo, font=("Courier", 16, "bold"), fg="blue")
+    titulo = tk.Label(frame, text=nombreTitulo, font=("Courier", 16, "bold"), fg="blue")
     titulo.grid(row=0, column=0, columnspan=7, pady=10) 
 
     # Botones con estilos y márgenes
-    boton1 = tk.Button(ventana, text="Mostrar inventario", bg="lightblue", fg="black", font=("Arial", 10) , command=lambda:imprimir_productos_Interfaz(ventana))
-    boton1.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+    boton1 = tk.Button(frame, text="Mostrar inventario", bg="lightblue", fg="black", font=("Arial", 10) , command=lambda:imprimir_productos_Interfaz(ventana))
+    boton1.grid(row=1, column=0, padx=15, pady=15, sticky="ew")
 
-    boton2 = tk.Button(ventana, text="Añadir Juego", bg="lightgreen", fg="black", font=("Arial", 10), command=lambda:agregar_producto_interfaz(ventana))
-    boton2.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+    boton2 = tk.Button(frame, text="Añadir Juego", bg="lightgreen", fg="black", font=("Arial", 10), command=lambda:agregar_producto_interfaz(ventana))
+    boton2.grid(row=1, column=1, padx=15, pady=15, sticky="ew")
 
-    boton3 = tk.Button(ventana, text="Buscar Juego", bg="lightyellow", fg="black", font=("Arial", 10),command=lambda:buscar_producto_interfaz(ventana))
-    boton3.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
+    boton3 = tk.Button(frame, text="Buscar Juego", bg="lightyellow", fg="black", font=("Arial", 10),command=lambda:buscar_producto_interfaz(ventana))
+    boton3.grid(row=1, column=2, padx=15, pady=15, sticky="ew")
 
-    boton4 = tk.Button(ventana, text="Actualizar Producto", bg="lightcoral", fg="black", font=("Arial", 10) , command=lambda:actualizar_producto_Interfaz())
-    boton4.grid(row=1, column=3, padx=5, pady=5, sticky="ew")
+    boton4 = tk.Button(frame, text="Actualizar Producto", bg="lightcoral", fg="black", font=("Arial", 10) , command=lambda:actualizar_producto_Interfaz())
+    boton4.grid(row=1, column=3, padx=15, pady=15, sticky="ew")
 
-    boton5 = tk.Button(ventana, text="Eliminar Producto", bg="lightpink", fg="black", font=("Arial", 10), command=lambda:eliminar_producto_Interfaz())
-    boton5.grid(row=1, column=4, padx=5, pady=5, sticky="ew")
+    boton5 = tk.Button(frame, text="Eliminar Producto", bg="lightpink", fg="black", font=("Arial", 10), command=lambda:eliminar_producto_Interfaz())
+    boton5.grid(row=2, column=0, padx=15, pady=15, sticky="ew")
 
-    boton6 = tk.Button(ventana, text="Resumen Inventario", bg="lightgray", fg="black", font=("Arial", 10), command=lambda:resumen_Interfaz(ventana))
-    boton6.grid(row=1, column=5, padx=5, pady=5, sticky="ew")
+    boton6 = tk.Button(frame, text="Resumen Inventario", bg="lightgray", fg="black", font=("Arial", 10), command=lambda:resumen_Interfaz(ventana))
+    boton6.grid(row=2, column=1, padx=15, pady=15, sticky="ew")
 
-    boton7 = tk.Button(ventana, text="Buscar Juego", bg="Black", fg="white", font=("Arial", 10, "bold"), command=lambda:buscar_cantidad_Interfaz())
-    boton7.grid(row=1, column=6, padx=5, pady=5, sticky="ew")
+    boton7 = tk.Button(frame, text="Ordenar por cantidad", bg="Black", fg="white", font=("Arial", 10, "bold"), command=lambda:buscar_cantidad_Interfaz())
+    boton7.grid(row=2, column=2, padx=15, pady=15, sticky="ew")
     
-    boton8 = tk.Button(ventana, text="Salir  ", bg="red", fg="white", font=("Arial", 10, "bold"), command=lambda:salir_Interfaz(ventana))
-    boton8.grid(row=1, column=7, padx=5, pady=5, sticky="ew")
+    boton8 = tk.Button(frame, text="Salir  ", bg="red", fg="white", font=("Arial", 10, "bold"), command=lambda:salir_Interfaz(ventana))
+    boton8.grid(row=2, column=3, padx=15, pady=15, sticky="ew")
     ventana.mainloop()
 
 inicio()
